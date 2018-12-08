@@ -1,4 +1,6 @@
 import math
+import hashlib
+
 
 class MD5:
 
@@ -112,9 +114,6 @@ class MD5:
 
     FUNC = [F, G, H, I]
 
-    def __add__(self, other):  # 操作符重载，模2^32加法
-        result = (self + other) % math.pow(2, 32)
-        return result
 
     def HDM5(self, Y):
         '''
@@ -137,8 +136,11 @@ class MD5:
                     k = (5 + 3 * j) % 16
                 else:
                     k = (7 * j) % 16
-
+                # t = MD5.T[i * 16 + j]
+                # r = MD5.A + f(self, MD5.B, MD5.C, MD5.D) + int(X[k], 2) + MD5.T[i * 16 + j]
+                # nr = r % pow(2, 32)
                 MD5.A = MD5.B + ((MD5.A + f(self, MD5.B, MD5.C, MD5.D) + int(X[k], 2) + MD5.T[i * 16 + j]) << MD5.S[i * 16 + j])
+                MD5.A = MD5.A % pow(2, 32)
                 temp = MD5.A
                 MD5.A = MD5.D
                 MD5.D = MD5.C
@@ -155,7 +157,12 @@ class MD5:
 
 
 if __name__ == "__main__":
-    string = 'hbx'
+    string = 'hbxhhh'
     md5 = MD5(string)
     md5.getResult()
-    print(MD5.A.__str__() + "\n" + MD5.B.__str__() + "\n" + MD5.C.__str__() + "\n" + MD5.D.__str__() + "\n")
+    print(hex(MD5.A))
+    print(hex(MD5.B))
+    print(hex(MD5.C))
+    print(hex(MD5.D))
+
+
